@@ -1,0 +1,14 @@
+{
+  "name": "clear-listeners",
+  "repo": "segmentio/clear-listeners",
+  "description": "Remove all window event listeners for testing",
+  "version": "0.1.0",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ]
+}
