@@ -22,7 +22,11 @@ var offFn = window[off];
 
 exports = module.exports = function(){
   var i = listeners.length;
-  while (i--) window[on].apply(window, listeners[i]);
+  while (i--) {
+    window[on].apply
+      ? window[on].apply(window, listeners[i])
+      : window[on](listeners[i][0], listeners[i][1]); // IE
+  }
   listeners.length = 0;
 };
 
@@ -36,7 +40,9 @@ exports = module.exports = function(){
 exports.bind = function(){
   window[on] = function(){
     listeners.push(arguments);
-    return onFn.apply(window, arguments);
+    return onFn.apply
+      ? onFn.apply(window, arguments)
+      : onFn(arguments[0], arguments[1]); // IE
   };
 
   window[off] = function(name, listener, useCapture){
@@ -47,9 +53,12 @@ exports.bind = function(){
       listeners.splice(i, 1);
       break;
     }
-    return offFn.apply(window, arguments);
+    return offFn.apply
+      ? offFn.apply(window, arguments)
+      : offFn(arguments[0], arguments[1]); // IE
   };
 };
+
 
 /**
  * Reset window back to normal.
