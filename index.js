@@ -9,8 +9,10 @@ var listeners = [];
  * Original window functions.
  */
 
-var addEventListener = window.addEventListener;
-var removeEventListener = window.removeEventListener;
+var on = window.addEventListener ? 'addEventListener' : 'attachEvent';
+var off = window.removeEventListener ? 'removeEventListener' : 'detachEvent';
+var onFn = window[on];
+var offFn = window[off];
 
 /**
  * Clear event listeners.
@@ -20,7 +22,7 @@ var removeEventListener = window.removeEventListener;
 
 exports = module.exports = function(){
   var i = listeners.length;
-  while (i--) window.removeEventListener.apply(window, listeners[i]);
+  while (i--) window[on].apply(window, listeners[i]);
   listeners.length = 0;
 };
 
@@ -32,12 +34,12 @@ exports = module.exports = function(){
  */
 
 exports.bind = function(){
-  window.addEventListener = function(name, listener, useCapture){
+  window[on] = function(){
     listeners.push(arguments);
-    return addEventListener.apply(window, arguments);
+    return onFn.apply(window, arguments);
   };
 
-  window.removeEventListener = function(name, listener, useCapture){
+  window[off] = function(name, listener, useCapture){
     for (var i = 0, n = listeners.length; i < n; i++) {
       if (name !== listeners[i][0]) continue;
       if (listener !== listeners[i][1]) continue;
@@ -45,7 +47,7 @@ exports.bind = function(){
       listeners.splice(i, 1);
       break;
     }
-    return removeEventListener.apply(window, arguments);
+    return offFn.apply(window, arguments);
   };
 };
 
@@ -57,8 +59,8 @@ exports.bind = function(){
 
 exports.unbind = function(){
   listeners.length = 0;
-  window.addEventListener = addEventListener;
-  window.removeEventListener = removeEventListener;
+  window[on] = onFn;
+  window[off] = offFn;
 };
 
 /**
