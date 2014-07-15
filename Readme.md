@@ -1,7 +1,7 @@
 
 # clear-listeners
 
-  Remove all window event listeners for testing
+  Remove all window event listeners (for testing)
 
 ## Installation
 
@@ -11,13 +11,13 @@
 
 ## API
 
-
+### clearListeners()
 
 ## License
 
   The MIT License (MIT)
 
-  Copyright (c) 2014 <copyright holders>
+  Copyright (c) 2014 friends@segment.io
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
