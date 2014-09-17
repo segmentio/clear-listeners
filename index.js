@@ -1,18 +1,18 @@
 
 /**
- * Window event listeners.
+ * Module dependencies.
  */
 
-var listeners = [];
+var stub = require('./lib/stub');
 
 /**
- * Original window functions.
+ * Stubbed objects.
  */
 
-var on = window.addEventListener ? 'addEventListener' : 'attachEvent';
-var off = window.removeEventListener ? 'removeEventListener' : 'detachEvent';
-var onFn = window[on];
-var offFn = window[off];
+var stubs = [
+  stub(window),
+  stub(document)
+];
 
 /**
  * Clear event listeners.
@@ -21,13 +21,8 @@ var offFn = window[off];
  */
 
 exports = module.exports = function(){
-  var i = listeners.length;
-  while (i--) {
-    window[on].apply
-      ? window[on].apply(window, listeners[i])
-      : window[on](listeners[i][0], listeners[i][1]); // IE
-  }
-  listeners.length = 0;
+  var i = stubs.length;
+  while (i--) stubs[i].clear();
 };
 
 /**
@@ -38,25 +33,8 @@ exports = module.exports = function(){
  */
 
 exports.bind = function(){
-  window[on] = function(){
-    listeners.push(arguments);
-    return onFn.apply
-      ? onFn.apply(window, arguments)
-      : onFn(arguments[0], arguments[1]); // IE
-  };
-
-  window[off] = function(name, listener, useCapture){
-    for (var i = 0, n = listeners.length; i < n; i++) {
-      if (name !== listeners[i][0]) continue;
-      if (listener !== listeners[i][1]) continue;
-      if (arguments.length > 2 && useCapture !== listeners[i][2]) continue;
-      listeners.splice(i, 1);
-      break;
-    }
-    return offFn.apply
-      ? offFn.apply(window, arguments)
-      : offFn(arguments[0], arguments[1]); // IE
-  };
+  var i = stubs.length;
+  while (i--) stubs[i].bind();
 };
 
 
@@ -67,9 +45,8 @@ exports.bind = function(){
  */
 
 exports.unbind = function(){
-  listeners.length = 0;
-  window[on] = onFn;
-  window[off] = offFn;
+  var i = stubs.length;
+  while (i--) stubs[i].unbind();
 };
 
 /**
